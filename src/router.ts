@@ -3,14 +3,8 @@ import { Router } from "express";
 
 const router = Router();
 
-router.get('/', (request, response) => {
-    return response.status(200).json({ success: true });
-});
-
-router.post('/', (request, response) => {
-    return response.status(201).send();
-});
-
-router.post('/user', userController.Create);
+router.post('/users', userController.Create);
+router.get('/users', userController.Get);
+router.get('/users/:id', userController.GetById);
 
 export { router };

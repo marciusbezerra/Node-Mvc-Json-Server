@@ -1,28 +1,45 @@
-
 import { Request, Response } from 'express';
 import { IUser } from '../entities/IUser';
+const axios = require('axios').default;
 
-const Create = (request: Request, response: Response) => {
-    try {
-        // const { name, email } = request.body;
-        // @ts-ignore
-        const user = <IUser>request.body;
-        console.log(`${user.name} ${user.email}`);
-        response.status(200).json(
-            {
-                success: true,
-                data: user
-            }
-        )
-    } catch (error) {
-        console.error(error);
-        return response.status(400).json(
-            {
-                success: false,
-                message: error.message || 'Unexpected Error!'
-            }
-        );
-    }
+const Create = async (request: Request, response: Response) => {
+
+    const user = <IUser>request.body;
+    const postResponse = await axios.post('http://localhost:3000/users', user);
+
+    console.log(`post response: ${postResponse}`);
+    response.status(postResponse.status).json(
+        {
+            success: true,
+            data: user
+        }
+    )
 }
 
-export default { Create };
+const Get = async (request: Request, response: Response) => {
+
+    const res = await axios.get('http://localhost:3000/users');
+
+    console.log(`get response: ${res}`);
+    response.status(res.status).json(
+        {
+            success: true,
+            data: res.data
+        }
+    )
+}
+
+const GetById = async (request: Request, response: Response) => {
+
+    const res = await axios.get(`http://localhost:3000/users/${request.params.id}`);
+
+    console.log(`post response: ${res}`);
+    response.status(res.status).json(
+        {
+            success: true,
+            data: res.data
+        }
+    )
+}
+
+export default { Create, Get, GetById };
